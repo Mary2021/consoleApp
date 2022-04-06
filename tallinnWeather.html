@@ -1,0 +1,47 @@
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+    <meta name='viewport' content="width=device-width, initial-scale=1.0">
+    <title>Tallinn weather</title>
+</head>
+<body>
+<script> 
+    const xhr = new XMLHttpRequest();
+    const url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.4717421&lon=24.4580604';
+
+    xhr.onload = (e) => {
+        console.log(xhr.responseText);
+        let myArr = JSON.parse(xhr.responseText);
+        const objEntries = Object.entries(myArr);
+
+        myfunc = (func) => { 
+            let arr = [];
+            for (i=0; i<10; i++){
+                let time = objEntries[2][1]['timeseries'][i]['time'];
+                let temp = objEntries[2][1]['timeseries'][i]['data']['instant']['details']['air_temperature'];
+                let value = time + ' ' + temp + '°C';
+                arr.push(value);
+            }
+    
+            for (i=0; i<arr.length; i++){
+                let tag = document.createElement('p');
+                tag.setAttribute("id", i);
+                let linetxt = arr[i];
+                let text = document.createTextNode(linetxt);
+                tag.appendChild(text);
+                let element = document.getElementById('view');
+                element.appendChild(tag);
+                console.log(arr[i]);
+            }
+        };
+        myfunc();
+    }
+    xhr.open("GET", url, true);
+    xhr.send(); 
+
+</script>
+<div id='view'></div>
+</body>
+
+        
+
